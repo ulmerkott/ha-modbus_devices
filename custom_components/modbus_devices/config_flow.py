@@ -18,7 +18,7 @@ from .const import DEFAULT_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_FAST
 
 from .devices.helpers import get_available_drivers
 
-CONFIG_ENTRY_NAME = "Modbus TCP/IP"
+CONFIG_ENTRY_NAME = "Modbus Devices"
 
 DEVICE_DATA_TCPIP = {
     CONF_DEVICE_MODE: DeviceMode.TCPIP,
