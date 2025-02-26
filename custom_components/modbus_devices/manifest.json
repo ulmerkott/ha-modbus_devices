@@ -1,0 +1,12 @@
+{
+	"domain": "modbus_devices",
+	"name": "Modbus Devices",
+	"codeowners": ["@eriknn"],
+	"config_flow": true,
+	"documentation": "https://github.com/eriknn/modbus_devices",
+	"iot_class": "local_polling",
+	"issue_tracker": "https://github.com/eriknn/modbus_devices/issues",
+	"loggers": ["custom_components.modbus_devices"],
+	"requirements": ["pymodbus==3.6.9"],
+	"version": "1.0.0"
+}
