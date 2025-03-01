@@ -1,4 +1,4 @@
-"""Config flow to configure Modbus TCP/IP integration"""
+"""Config flow to configure Modbus Devices integration"""
 import asyncio
 import glob
 import logging
