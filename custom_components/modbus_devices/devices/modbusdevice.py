@@ -22,6 +22,13 @@ class InitHelper(type):
         return instance
 
 class ModbusDevice(metaclass=InitHelper):
+    # Default properties
+    manufacturer = None
+    model = None
+    sw_version = None
+    serial_number = None
+    Datapoints: Dict[ModbusGroup, Dict[str, ModbusDatapoint]] = {}
+
     def __init__(self, connection_params: ConnectionParams):
         if isinstance(connection_params, TCPConnectionParams):
             self._client = AsyncModbusTcpClient(host=connection_params.ip, port=connection_params.port)
@@ -31,23 +38,14 @@ class ModbusDevice(metaclass=InitHelper):
             raise ValueError("Unsupported connection parameters")
 
         self._slave_id = connection_params.slave_id
-        
-        # Default properties
-        self.manufacturer = None
-        self.model = None
-        self.sw_version = None
-        self.serial_number = None
-
-        # Initialize empty datapoints
-        self.Datapoints: Dict[ModbusGroup, Dict[str, ModbusDatapoint]] = {}
-
-        # Add default data groups
-        self.Datapoints[ModbusDefaultGroups.CONFIG] = { }
-        self.Datapoints[ModbusDefaultGroups.UI] = { }
 
         self.firstRead = True
     
     def post_init(self):
+        # Ensure default groups exist
+        self.Datapoints.setdefault(ModbusDefaultGroups.CONFIG, {})
+        self.Datapoints.setdefault(ModbusDefaultGroups.UI, {})
+
         # Add Config UI if we have config values
         if len(self.Datapoints[ModbusDefaultGroups.CONFIG]) > 0:
             self.Datapoints[ModbusDefaultGroups.UI] = {
@@ -94,22 +92,28 @@ class ModbusDevice(metaclass=InitHelper):
     """ ******************************************************* """
     async def readGroup(self, group: ModbusGroup):
         """Read Modbus group registers and update data points."""
+        MAX_REGISTERS_PER_READ = 125
 
-        # Calculate the total number of registers to read
-        n_reg = sum(point.Length for point in self.Datapoints[group].values())
-        if n_reg == 0:
-            _LOGGER.warning("No data points to read in group: %s", self.Datapoints[group])
-            return
+        addresses = [
+            (dp.Address, dp.Length)
+            for dp in self.Datapoints[group].values()
+        ]
+        start_addr = min(addr for addr, _ in addresses)
+        end_addr = max(addr + length for addr, length in addresses)
+        n_reg = end_addr - start_addr
 
-        first_key = next(iter(self.Datapoints[group]))
-        first_address = self.Datapoints[group][first_key].Address
+        if n_reg > MAX_REGISTERS_PER_READ:
+            raise ValueError(
+                f"Too many registers to read at once ({n_reg} requested, max {MAX_REGISTERS_PER_READ}) "
+                f"for group {group}. Consider splitting the group."
+        )
 
         # Read the appropriate type of registers
         try:
             if group.mode == ModbusMode.INPUT:
-                response = await self._client.read_input_registers(address=first_address, count=n_reg, slave=self._slave_id)
+                response = await self._client.read_input_registers(address=start_addr, count=n_reg, slave=self._slave_id)
             elif group.mode == ModbusMode.HOLDING:
-                response = await self._client.read_holding_registers(address=first_address, count=n_reg, slave=self._slave_id)
+                response = await self._client.read_holding_registers(address=start_addr, count=n_reg, slave=self._slave_id)
             else:
                 raise ValueError(f"Unsupported Modbus mode: {group.mode}")
         except Exception as err:
@@ -119,15 +123,13 @@ class ModbusDevice(metaclass=InitHelper):
         if response.isError():
             raise ModbusException(f"Error reading group {group}: {response}")
 
-        _LOGGER.debug("Read data from first key: %s - %s", first_key, response.registers)
+        _LOGGER.debug("Read data from address: %s - %s", start_addr, response.registers)
 
         # Process the registers and update data points
-        register_index = 0
-        for dataPointName, data in self.Datapoints[group].items():
-            registers = response.registers[register_index:register_index + data.Length]
-            register_index += data.Length
-
-            data.Value = self.process_registers(registers, data.Scaling)
+        for name, dp in self.Datapoints[group].items():
+            offset = dp.Address - start_addr
+            registers = response.registers[offset:offset + dp.Length]
+            dp.Value = self.process_registers(registers, dp.Scaling)
 
     """ ******************************************************* """
     """ **************** READ SINGLE VALUE ******************** """

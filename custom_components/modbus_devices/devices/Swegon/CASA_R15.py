@@ -1,11 +1,18 @@
+import logging
 from .CASA_R4 import Device as BaseDevice
 
+from copy import deepcopy
+
+_LOGGER = logging.getLogger(__name__)
+
 class Device(BaseDevice):
-    def __init__(self, connection_params):
-        super().__init__(connection_params)
+    Datapoints = deepcopy(BaseDevice.Datapoints)
 
-        # Override static device information
-        self.manufacturer="Swegon"
-        self.model="CASA R15"
+    # Override static device information
+    manufacturer="Swegon"
+    model="CASA R15"
 
-        self.Datapoints[self.GROUP_SETPOINTS]["Temperature Setpoint"].Scaling = 1
+    # Modify datapoints    
+    Datapoints[BaseDevice.GROUP_SETPOINTS]["Temperature Setpoint"].Scaling = 1
+
+    _LOGGER.debug("Loaded datapoints for %s %s", manufacturer, model)
