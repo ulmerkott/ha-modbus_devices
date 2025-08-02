@@ -36,8 +36,21 @@ class ModbusSensorEntity(ModbusBaseEntity, SensorEntity):
         self._attr_device_class = modbusDataPoint.DataType.deviceClass
         self._attr_native_unit_of_measurement = modbusDataPoint.DataType.units
 
+        """Cusom Entity properties"""
+        self.enum = modbusDataPoint.DataType.enum
+
     @property
     def native_value(self):
         """Return the value of the sensor."""
         val = self.coordinator.get_value(self._group, self._key)
-        return val
+
+        # Check if self.enum exists and is a dictionary
+        if self.enum and isinstance(self.enum, dict):
+            mapped_value = self.enum.get(val)
+            if mapped_value is not None:
+                return mapped_value
+            else:
+                return val
+        else:
+            # If no enum, return the raw value
+            return val

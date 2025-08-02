@@ -16,6 +16,7 @@ class ModbusData:
 @dataclass
 class ModbusSensorData(ModbusData):
     units: str = None                   # None | from homeassistant.const import UnitOf....
+    enum: dict = field(default_factory=dict)
 
 @dataclass
 class ModbusNumberData(ModbusData):
