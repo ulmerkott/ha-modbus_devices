@@ -22,29 +22,34 @@ Datapoints[MY_GROUP] = {
 
 Datapoints can take the following parameters:
 
-Parameter	Type		Default		Description
-Address:	int		0		0-indexed address
-Length:		int		1		Number of registers
-Scaling: 	float		1.0		Multiplier for raw value      
-Value: 		float		0.0             Scaled value
-Attrs: 		Dict		None		Dict for attributes
-DataType: 	ModbusData	None		Entitiy parameters
+| Parameter | Type       | Default  | Description              |
+|-----------|------------|----------|--------------------------|
+| Address   | int        | 0        | 0-indexed address        |
+| Length    | int        | 1        | Number of registers      |
+| Scaling   | float      | 1.0      | Multiplier for raw value |
+| Value     | float      | 0.0      | Scaled value             |
+| Attrs     | Dict       | None     | Dict for attributes      |
+| DataType  | ModbusData | None     | Entitiy parameters       |
 
 ## Common parameters
 
 All DataTypes can take the following parameters:
 
-deviceClass:	None | Load value from HA device class  
-category:	None | "config" | "diagnostic"  
-icon:		None | "mdi:thermometer"
+| Parameter   | Type       | Default  | Description              |
+|-------------|------------|----------|--------------------------|
+| deviceClass | str        | None     | Device Class             |
+| category    | str        | None     | Category (CONFIG etc)    |
+| icon        | str        | None     | "mdi:thermometer" etc    |
 
 ## ModbusSensorData
 
 This creates a "Sensor" entity. Typically used for most readonly values.
 
 Parameters:  
-units:		None | "%" | SensorDeviceClass.TEMPERATURE  
-enum:		None | {0: "Value0", 1: "Value1", 2:"Value2"}
+| Parameter   | Type       | Default  | Description                |
+|-------------|------------|----------|----------------------------|
+| units       | str        | None     | Units                      |
+| enum        | Dict       | None     | {0: "Value0", 1: "Value1"} |
 
 ```
 Datapoints[MY_GROUP] = {  
@@ -56,11 +61,13 @@ Datapoints[MY_GROUP] = {
 
 This creates a "Number" entity. Typically used for numeric input.
 
-Parameters:  
-units:		None | "%" | NumberDeviceClass.TEMPERATURE  
-min_value:	0  
-max_value:	65535  
-step:		1
+Parameters: 
+| Parameter | Type       | Default  | Description              |
+|-----------|------------|----------|--------------------------|
+| units     | str        | None     | Units                    |
+| min_value | int        | 0        | Minimum value            |
+| max_value | int        | 65535    | Maximum value            |
+| step      | int        | 1        | Step (increment in UI)   |
 
 ```
 Datapoints[MY_GROUP] = {  
@@ -73,7 +80,9 @@ Datapoints[MY_GROUP] = {
 This creates a "Select" entity. This creates a dropdown/select for enumerated values.
 
 Parameters:  
-options:	{0: "Value0", 1: "Value1", 2:"Value2"}
+| Parameter | Type       | Default  | Description                |
+|-----------|------------|----------|----------------------------|
+| options   | Dict       | None     | {0: "Value0", 1: "Value1"} |
 
 ```
 Datapoints[MY_GROUP] = {
