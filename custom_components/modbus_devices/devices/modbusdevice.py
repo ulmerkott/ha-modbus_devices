@@ -235,4 +235,4 @@ class ModbusDevice(metaclass=InitHelper):
                 return newVal.rstrip('\x00')
             except ValueError as e:
                 # Failed to decode text, most likely just registers we are ignoring
-                return None
+                return registers
