@@ -18,8 +18,8 @@ Datapoints[MY_GROUP] = {
 All DataTypes can take the following parameters:
 
 deviceClass:	None | Load value from HA device class 
-category:		None | "config" | "diagnostic"
-icon:			None | "mdi:thermometer"
+category:	None | "config" | "diagnostic"
+icon:		None | "mdi:thermometer"
 
 ## ModbusSensorData
 
