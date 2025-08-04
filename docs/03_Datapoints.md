@@ -18,6 +18,18 @@ Datapoints[MY_GROUP] = {
 }
 ```
 
+## Datapoints parameters
+
+Datapoints can take the following parameters:
+
+Parameter	Type		Default		Description
+Address:	int		0		0-indexed address
+Length:		int		1		Number of registers
+Scaling: 	float		1.0		Multiplier for raw value      
+Value: 		float		0.0             Scaled value
+Attrs: 		Dict		None		Dict for attributes
+DataType: 	ModbusData	None		Entitiy parameters
+
 ## Common parameters
 
 All DataTypes can take the following parameters:
