@@ -1,6 +1,7 @@
-# Datapoints (Home Assistant Entities)
+# Datapoints
 
-Every datapoint that is created may or may not define a corresponding DataType (Home Assistant Entity).
+Every datapoint that is created may or may not be connected to a modbus address, and it may or
+may not define a corresponding DataType (Home Assistant Entity).
 To create an entitiy, we pass the "DataType" argument to our ModbusDatapoint instantiation.
 For an updated list of availiable entitiy types, look at modbus_devices/devices/datatypes.py
 
