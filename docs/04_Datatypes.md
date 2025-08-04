@@ -42,7 +42,7 @@ Parameters:
 
 ```
 Datapoints[MY_GROUP] = {  
-	"DatapointName": ModbusDatapoint(Address=0, DataType=ModbusNumberData(deviceClass=NumberDeviceClass.TEMPERATURE, units=UnitOfTemperature, min_value=10, max_value=30, step=0.5)),  
+	"DatapointName": ModbusDatapoint(Address=0, DataType=ModbusNumberData(deviceClass=NumberDeviceClass.TEMPERATURE, units=UnitOfTemperature, min_value=10, max_value=30, step=2)),  
 }
 ```
 
