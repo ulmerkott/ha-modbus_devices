@@ -13,7 +13,7 @@ All groups have to be defined before datapoints are added to them:
 
 Parameters:
 
-ModbusMode:		None | INPUT | HOLDING
+ModbusMode:		None | INPUT | HOLDING  
 ModbusPollMode:	POLL_OFF | POLL_ON | POLL_ONCE
 
 MY_GROUP = ModbusGroup(ModbusMode.HOLDING, ModbusPollMode.POLL_ON)
@@ -22,14 +22,14 @@ MY_GROUP = ModbusGroup(ModbusMode.HOLDING, ModbusPollMode.POLL_ON)
 
 This defines which type of registers this group contains. At the moment only input and holding registers are supported.
 
-NONE:		Can be used if this group isn't supposed to be read
-INPUT:		Input registers
+NONE:		Can be used if this group isn't supposed to be read  
+INPUT:		Input registers  
 HOLDING:	Holding registers
 
 ## Poll Mode
 
-POLL_OFF:	Datapoints will never be polled.
-POLL_ON:	Datapoints are polled according to defined poll rate
+POLL_OFF:	Datapoints will never be polled.  
+POLL_ON:	Datapoints are polled according to defined poll rate  
 POLL_ONCE:	Datapoints are only polled once at startup. Can be used for values that typically don't change - serial numbers etc.
 
 ## Virtual datapoints
