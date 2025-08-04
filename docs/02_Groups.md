@@ -4,8 +4,8 @@ All datapoints have to be ordered in groups, where one group equals one modbus t
 When a group is read, all data from the lowest to the highest address in that group is read,
 and inserted into the corresponding datapoint.
 
-Modbus support a maximum of 125 registers in one telegram, so if your group spans a larger 
-number of registers than this, the request will not be performed, and an erro thrown.
+Modbus supports a maximum of 125 registers in one telegram, so if your group spans a larger 
+number of registers than this, the request will not be performed, and an error thrown.
 
 ## Group definitions
 

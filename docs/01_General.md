@@ -2,7 +2,7 @@
 
 The purpose of this integration is to allow integration of modbus devices in Home Assistant that:
 * Are recognized as true "devices"
-* Are asily multiplied in cases where one has multiple similar devices
+* Are easily multiplied in cases where one has multiple similar devices
 * Allows manipulation and calculation of values
 
 ## Installation
