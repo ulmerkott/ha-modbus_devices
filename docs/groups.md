@@ -16,7 +16,7 @@ Parameters:
 ModbusMode:		None | INPUT | HOLDING  
 ModbusPollMode:	POLL_OFF | POLL_ON | POLL_ONCE
 
-MY_GROUP = ModbusGroup(ModbusMode.HOLDING, ModbusPollMode.POLL_ON)
+`MY_GROUP = ModbusGroup(ModbusMode.HOLDING, ModbusPollMode.POLL_ON)`
 
 ## Modbus Mode
 
