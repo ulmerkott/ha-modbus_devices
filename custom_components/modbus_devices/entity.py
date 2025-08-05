@@ -22,7 +22,6 @@ class ModbusBaseEntity(CoordinatorEntity):
         self._attr_device_info = {
             "identifiers": self.coordinator.identifiers,
         }
-        self._extra_state_attributes = {}
         
         """Store this entities keys."""
         self._group = group
@@ -30,10 +29,6 @@ class ModbusBaseEntity(CoordinatorEntity):
 
     @property
     def extra_state_attributes(self):
-        """Return entity specific state attributes."""
-        attrs = {}
-
-        new_attrs = self.coordinator.get_attrs(self._group, self._key)
-        if new_attrs is not None:
-            attrs.update(new_attrs)
-        return attrs
+        """Return entity-specific state attributes."""
+        attrs = self.coordinator.get_attrs(self._group, self._key)
+        return attrs if attrs is not None else {}
