@@ -31,7 +31,6 @@ class Device(ModbusDevice):
         "Setpoint Flowrate": ModbusDatapoint(Address=0, Scaling=0.01, DataType=ModbusNumberData(units=PERCENTAGE, min_value=0, max_value=100, step=1)),
         "Override": ModbusDatapoint(Address=1, DataType=ModbusSelectData(options={0: "None", 1: "Open", 2: "Closed", 3: "Q Min", 4: "Q Max"})),
         "Command": ModbusDatapoint(Address=2, DataType=ModbusSelectData(options={0: "None", 1: "Synchronization", 2: "Test", 4: "Reset"})),
-        "Unused": ModbusDatapoint(Address=3),
         "Position": ModbusDatapoint(Address=4, Scaling=0.01, DataType=ModbusSensorData(units=PERCENTAGE)),
         "Position Degrees": ModbusDatapoint(Address=5, DataType=ModbusSensorData(units=DEGREE)),
         "Flowrate Percent": ModbusDatapoint(Address=6, Scaling=0.01, DataType=ModbusSensorData(units=PERCENTAGE)),
@@ -73,7 +72,7 @@ class Device(ModbusDevice):
         flowUnits = UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR
         match self.Datapoints[ModbusDefaultGroups.CONFIG]["201 Volume Flow Unit"].Value:
             case 0:
-                flowUnits = "l/s"
+                flowUnits = UnitOfVolumeFlowRate.LITERS_PER_SECOND
             case 1:
                 flowUnits = UnitOfVolumeFlowRate.CUBIC_METERS_PER_HOUR
             case 6:
