@@ -1,6 +1,5 @@
 import logging
 
-from dataclasses import dataclass
 from typing import Dict
 
 from homeassistant.helpers.entity import EntityCategory
@@ -15,19 +14,12 @@ from .datatypes import ModbusSelectData, ModbusNumberData
 
 _LOGGER = logging.getLogger(__name__)
 
-class InitHelper(type):
-    def __call__(cls, *args, **kwargs):
-        instance = super().__call__(*args, **kwargs)
-        instance.post_init()
-        return instance
-
-class ModbusDevice(metaclass=InitHelper):
+class ModbusDevice():
     # Default properties
     manufacturer = None
     model = None
     sw_version = None
     serial_number = None
-    Datapoints: Dict[ModbusGroup, Dict[str, ModbusDatapoint]] = {}
 
     def __init__(self, connection_params: ConnectionParams):
         if isinstance(connection_params, TCPConnectionParams):
@@ -36,22 +28,29 @@ class ModbusDevice(metaclass=InitHelper):
             self._client = AsyncModbusSerialClient(port=connection_params.serial_port, baudrate=connection_params.baud_rate)
         else:
             raise ValueError("Unsupported connection parameters")
-
         self._slave_id = connection_params.slave_id
 
+        self.Datapoints: Dict[ModbusGroup, Dict[str, ModbusDatapoint]] = {}
+        self.loadDatapoints()
+        self.loadConfigUI()
+        _LOGGER.debug("Loaded datapoints for %s %s", self.manufacturer, self.model)
+
         self.firstRead = True
-    
-    def post_init(self):
+
+    def loadConfigUI(self):
         # Ensure default groups exist
         self.Datapoints.setdefault(ModbusDefaultGroups.CONFIG, {})
         self.Datapoints.setdefault(ModbusDefaultGroups.UI, {})
 
         # Add Config UI if we have config values
-        if len(self.Datapoints[ModbusDefaultGroups.CONFIG]) > 0:
+        if self.Datapoints[ModbusDefaultGroups.CONFIG]:
             self.Datapoints[ModbusDefaultGroups.UI] = {
                 "Config Selection": ModbusDatapoint(DataType=ModbusSelectData(category=EntityCategory.CONFIG)),
                 "Config Value": ModbusDatapoint(DataType=ModbusNumberData(category=EntityCategory.CONFIG, min_value=0, max_value=65535, step=1))
             }
+
+    def loadDatapoints(self):
+        pass
 
     """ ******************************************************* """
     """ ************* FUNCTIONS CALLED ON EVENTS ************** """
@@ -73,7 +72,7 @@ class ModbusDevice(metaclass=InitHelper):
         self.onBeforeRead()
 
         try:
-            for group, datapoints in self.Datapoints.items():
+            for group, _ in self.Datapoints.items():
                 if group.poll_mode == ModbusPollMode.POLL_ON:
                     await self.readGroup(group)
                 elif group.poll_mode == ModbusPollMode.POLL_ONCE and self.firstRead:
@@ -81,9 +80,9 @@ class ModbusDevice(metaclass=InitHelper):
         except Exception as err:
             raise
 
-        if self.firstRead:      
-            self.onAfterFirstRead()
+        if self.firstRead:   
             self.firstRead = False
+            self.onAfterFirstRead()
 
         self.onAfterRead()
 
