@@ -5,6 +5,7 @@ from typing import Dict
 from homeassistant.helpers.entity import EntityCategory
 
 from pymodbus.client import AsyncModbusTcpClient, AsyncModbusSerialClient
+from pymodbus.framer import FramerType
 from pymodbus.exceptions import ModbusException
 
 from .connection import ConnectionParams, TCPConnectionParams, RTUConnectionParams
@@ -23,7 +24,7 @@ class ModbusDevice():
 
     def __init__(self, connection_params: ConnectionParams):
         if isinstance(connection_params, TCPConnectionParams):
-            self._client = AsyncModbusTcpClient(host=connection_params.ip, port=connection_params.port)
+            self._client = AsyncModbusTcpClient(host=connection_params.ip, port=connection_params.port, framer=FramerType.RTU)
         elif isinstance(connection_params, RTUConnectionParams):
             self._client = AsyncModbusSerialClient(port=connection_params.serial_port, baudrate=connection_params.baud_rate)
         else:
