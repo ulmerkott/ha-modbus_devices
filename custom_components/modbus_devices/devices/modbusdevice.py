@@ -110,9 +110,9 @@ class ModbusDevice():
         # Read the appropriate type of registers
         try:
             if group.mode == ModbusMode.INPUT:
-                response = await self._client.read_input_registers(address=start_addr, count=n_reg, slave=self._slave_id)
+                response = await self._client.read_input_registers(address=start_addr, count=n_reg, client_id=self._slave_id)
             elif group.mode == ModbusMode.HOLDING:
-                response = await self._client.read_holding_registers(address=start_addr, count=n_reg, slave=self._slave_id)
+                response = await self._client.read_holding_registers(address=start_addr, count=n_reg, client_id=self._slave_id)
             else:
                 raise ValueError(f"Unsupported Modbus mode: {group.mode}")
         except Exception as err:
@@ -144,9 +144,9 @@ class ModbusDevice():
 
         try:
             if group.mode == ModbusMode.INPUT:
-                response = await self._client.read_input_registers(address=datapoint.Address, count=length, slave=self._slave_id)
+                response = await self._client.read_input_registers(address=datapoint.Address, count=length, client_id=self._slave_id)
             elif group.mode == ModbusMode.HOLDING:
-                response = await self._client.read_holding_registers(address=datapoint.Address, count=length, slave=self._slave_id)
+                response = await self._client.read_holding_registers(address=datapoint.Address, count=length, client_id=self._slave_id)
             else:
                 raise ValueError(f"Unsupported Modbus mode: {group.mode}")
         except Exception as err:
@@ -190,9 +190,9 @@ class ModbusDevice():
         # Write the registers
         try:
             if length == 1:
-                response = await self._client.write_register(address=datapoint.Address, value=registers[0], slave=self._slave_id)
+                response = await self._client.write_register(address=datapoint.Address, value=registers[0], client_id=self._slave_id)
             else:
-                response = await self._client.write_registers(address=datapoint.Address, values=registers, slave=self._slave_id)
+                response = await self._client.write_registers(address=datapoint.Address, values=registers, client_id=self._slave_id)
         except Exception as err:
             raise
 
